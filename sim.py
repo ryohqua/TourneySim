@@ -7,62 +7,13 @@ Create a single elim bracket with 2^x people.
 #Use Data from Offcurve.com to determine probability of expected lineups.
 
 Using HSReplay Matchup Data determine probability of each person winning.
-
-
-
-
 '''
 
 import math
 import random
 import csv
+import bracket
 
-
-# Helper to add a layer to the bracket
-def tournament_round(no_of_teams, matchlist):
-    new_matches = []
-    for team_or_match in matchlist:
-        if type(team_or_match) == type([]):
-            new_matches += [tournament_round(no_of_teams, team_or_match)]
-        else:
-            new_matches += [[team_or_match, no_of_teams + 1 - team_or_match]]
-    return new_matches
-
-
-# Makes the bracket array 1d
-def flatten_list(matches):
-    teamlist = []
-    for team_or_match in matches:
-        if type(team_or_match) == type([]):
-            teamlist += flatten_list(team_or_match)
-        else:
-            teamlist += [team_or_match]
-    return teamlist
-
-
-# Return a Bracket (array) with num teams
-def generate_tournament(num):
-    num_rounds = math.log(num, 2)
-    if num_rounds != math.trunc(num_rounds):
-        raise ValueError("Number of teams must be a power of 2")
-    teams = 1
-    result = [1]
-    while teams != num:
-        teams *= 2
-        result = tournament_round(teams, result)
-    simulate_tourney(flatten_list(result))
-    return
-
-
-# Simulate all the games in a round
-def simulate_round(arr):
-    i = 0
-    result = []
-    while i < len(arr):
-        winner = simulate_match(arr[i], arr[i + 1])
-        result.append(winner)
-        i += 2
-    return result
 
 
 # Determine the deck you would like to ban from your opponent
@@ -140,6 +91,17 @@ def simulate_match(i, j):
     return winner
 
 
+# Simulate all the games in a round
+def simulate_round(arr):
+    i = 0
+    result = []
+    while i < len(arr):
+        winner = simulate_match(arr[i], arr[i + 1])
+        result.append(winner)
+        i += 2
+    return result
+
+
 # Simulate the Entire Tournament and return a winner
 def simulate_tourney(arr):
     i = 1
@@ -151,4 +113,4 @@ def simulate_tourney(arr):
     print("winner is player", arr[0])
 
 
-generate_tournament(4)
+simulate_tourney(bracket.generate_bracket(4))
