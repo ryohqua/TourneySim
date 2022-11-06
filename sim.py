@@ -118,5 +118,22 @@ def flip(p):
     return 'H' if random.random() < p else 'T'
 
 
-t = Tournament(int(input("# Players: ")), int(input("BO3/5: ")))
+while True:
+    nplayers = int(input("# Players (Multiple of 4) : "))
+    if not nplayers%4 == 0:
+        print("Must be a multiple of 4")
+        continue
+    else:
+        break
+
+while True:
+    bo = int(input("BO3 or BO5 : "))
+    if bo not in (3, 5):
+        print("only BO3 and BO5 are supported")
+        continue
+    else:
+        break
+
+
+t = Tournament(nplayers, bo)
 t.simulate_tourney()
